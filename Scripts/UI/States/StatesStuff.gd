@@ -137,8 +137,20 @@ func _on_duplicate_state_pressed() -> void:
 
 func _on_state_remap_pressed() -> void:
 	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
-		%StateName.text = StateButton.selected_state.state_name
-	%StateButtonHbox.get_node("StateRemapButton").update_key_text()
+		var selected_state = StateButton.selected_state
+		
+		%StateName.text = selected_state.state_name
+		%StateButtonHbox.get_node("ControlsGroup").get_node("MIDIControlsEnable").button_pressed = selected_state.midi_enabled
+		%StateButtonHbox.get_node("ChannelGroup").get_node("MIDIChannelEnable").button_pressed = selected_state.midi_channel_enabled
+		%StateButtonHbox.get_node("NoteGroup").get_node("MIDINoteEnable").button_pressed = selected_state.midi_note_enabled
+		%StateButtonHbox.get_node("VelocityGroup").get_node("MIDIVelocityEnable").button_pressed = selected_state.midi_velocity_enabled
+		%StateButtonHbox.get_node("OnOffGroup").get_node("MIDIOnOffEnable").button_pressed = selected_state.midi_onoff_state_enabled
+		
+		%StateButtonHbox.get_node("ChannelGroup").get_node("MIDIChannel").value = selected_state.midi_channel
+		%StateButtonHbox.get_node("NoteGroup").get_node("MIDINote").value = selected_state.midi_note
+		%StateButtonHbox.get_node("VelocityGroup").get_node("MIDIVelocity").value = selected_state.midi_velocity
+		%StateButtonHbox.get_node("OnOffGroup").get_node("MIDIOnOff").button_pressed = selected_state.midi_onoff_state
+	%StateButtonHbox.get_node("HotkeyGroup").get_node("StateRemapButton").update_key_text()
 	%StateRemapPopup.popup()
 
 func _on_state_remap_popup_close_requested() -> void:

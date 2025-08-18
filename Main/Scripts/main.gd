@@ -40,6 +40,7 @@ func _ready():
 	await get_tree().create_timer(0.1).timeout
 	Global.update_ui_pieces.emit()
 	Global.update_camera_smoothing()
+	OS.open_midi_inputs()
 
 func update_theme(new_theme : Theme = preload("res://Themes/PurpleTheme/GUITheme.tres")):
 	%UIHolder.theme = new_theme
@@ -252,3 +253,5 @@ func _notification(what):
 		rec_inp = false
 	elif what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
 		rec_inp = true
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST:
+		OS.close_midi_inputs()

@@ -84,7 +84,7 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 transparent_bg = true
 initial_position = 2
-size = Vector2i(358, 200)
+size = Vector2i(350, 250)
 visible = false
 popup_window = true
 

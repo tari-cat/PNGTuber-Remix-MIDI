@@ -5,6 +5,19 @@ class_name StateButton
 @export var input_key : String = str(randi())
 var saved_event : InputEvent
 var state_name : String 
+
+var midi_enabled : bool 
+
+var midi_channel_enabled : bool
+var midi_note_enabled : bool
+var midi_velocity_enabled : bool
+var midi_onoff_state_enabled : bool
+
+var midi_channel : int
+var midi_note : int
+var midi_velocity : int
+var midi_onoff_state : bool
+
 static var selected_state : StateButton = null
 static var other_states : Array[StateButton] = []
 
@@ -62,6 +75,39 @@ func _input(event):
 			if event.is_action_pressed(input_key):
 				select_state()
 				Global.get_sprite_states(state)
+	if event is InputEventMIDI and midi_enabled:
+		handle_midi(event)
+
+func handle_midi(event: InputEventMIDI) -> void:
+	var message = event.message
+	
+	# bitwise flags for MIDIMessage enum
+	var note_toggle_flags = MIDI_MESSAGE_NOTE_ON | MIDI_MESSAGE_NOTE_OFF
+	var note_on_flags = MIDI_MESSAGE_NOTE_ON
+	
+	# isToggle is if the message has a Note ON/OFF bitwise flag
+	var isToggle = (event.message != MIDI_MESSAGE_NONE) && (message & note_toggle_flags) == note_toggle_flags
+	
+	# if it's neither an on or off, return early because we don't really need it
+	if !isToggle:
+		return
+	
+	var event_channel = event.channel + 1 # usually 0-15, make it 1-16 for consistency
+	var event_note = event.pitch
+	var event_velocity = event.velocity
+	var event_onoff_state = (event.message != MIDI_MESSAGE_NONE) && (message & note_on_flags) == note_on_flags
+	
+	if (midi_channel_enabled && midi_channel != event_channel):
+		return
+	if (midi_note_enabled && midi_note != event_note):
+		return
+	if (midi_velocity_enabled && midi_velocity != event_velocity):
+		return
+	if (midi_onoff_state_enabled && midi_onoff_state != event_onoff_state):
+		return
+	
+	select_state()
+	Global.get_sprite_states(state)
 
 func bg_key_pressed(key):
 	if InputMap.action_get_events(input_key).size() > 0:

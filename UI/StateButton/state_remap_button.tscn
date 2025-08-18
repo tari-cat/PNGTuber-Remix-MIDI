@@ -1,26 +1,29 @@
-[gd_scene load_steps=3 format=3 uid="uid://drok2umdmycjc"]
+[gd_scene load_steps=4 format=3 uid="uid://drok2umdmycjc"]
 
 [ext_resource type="Script" uid="uid://her88y5iifbo" path="res://Scripts/UI/States/StateRemapButton.gd" id="2_ih08l"]
+[ext_resource type="Script" uid="uid://181yhrus3jhb" path="res://Scripts/UI/Others/Spinboxes.gd" id="2_y07u0"]
 [ext_resource type="Texture2D" uid="uid://8rb6kumug0p5" path="res://UI/Assets/DeleteButton.png" id="3_5sre3"]
 
-[node name="StateButtonHbox" type="HBoxContainer"]
-offset_right = 258.0
-offset_bottom = 31.0
+[node name="StateButtonHbox" type="VBoxContainer"]
+offset_right = 218.0
+offset_bottom = 136.0
 size_flags_horizontal = 3
 
-[node name="State" type="Label" parent="."]
-custom_minimum_size = Vector2(100, 0)
+[node name="HotkeyGroup" type="HBoxContainer" parent="."]
 layout_mode = 2
-text = "Hotkey :"
 
-[node name="StateRemapButton" type="Button" parent="." groups=["StateRemapButton"]]
+[node name="State" type="Label" parent="HotkeyGroup"]
+layout_mode = 2
+text = "Hotkey:"
+
+[node name="StateRemapButton" type="Button" parent="HotkeyGroup" groups=["StateRemapButton"]]
 custom_minimum_size = Vector2(120, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "kp 0"
 script = ExtResource("2_ih08l")
 
-[node name="Remove" type="Button" parent="."]
+[node name="Remove" type="Button" parent="HotkeyGroup"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -29,4 +32,103 @@ icon = ExtResource("3_5sre3")
 icon_alignment = 1
 expand_icon = true
 
-[connection signal="pressed" from="Remove" to="StateRemapButton" method="_on_remove_pressed"]
+[node name="ControlsGroup" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MIDIControlsEnableLabel" type="Label" parent="ControlsGroup"]
+layout_mode = 2
+text = "Enable MIDI Controls?"
+
+[node name="MIDIControlsEnable" type="CheckBox" parent="ControlsGroup"]
+layout_mode = 2
+
+[node name="ChannelGroup" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MIDIChannelEnableLabel" type="Label" parent="ChannelGroup"]
+layout_mode = 2
+text = "Specific Channel?"
+
+[node name="MIDIChannelEnable" type="CheckBox" parent="ChannelGroup"]
+layout_mode = 2
+
+[node name="MIDIChannelLabel" type="Label" parent="ChannelGroup"]
+layout_mode = 2
+text = "Channel:"
+
+[node name="MIDIChannel" type="SpinBox" parent="ChannelGroup"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 16.0
+value = 1.0
+script = ExtResource("2_y07u0")
+
+[node name="NoteGroup" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MIDINoteEnableLabel" type="Label" parent="NoteGroup"]
+layout_mode = 2
+text = "Specific Note?"
+
+[node name="MIDINoteEnable" type="CheckBox" parent="NoteGroup"]
+layout_mode = 2
+
+[node name="MIDINoteLabel" type="Label" parent="NoteGroup"]
+layout_mode = 2
+text = "Note:"
+
+[node name="MIDINote" type="SpinBox" parent="NoteGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 127.0
+script = ExtResource("2_y07u0")
+
+[node name="VelocityGroup" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MIDIVelocityEnableLabel" type="Label" parent="VelocityGroup"]
+layout_mode = 2
+text = "Specific Velocity?"
+
+[node name="MIDIVelocityEnable" type="CheckBox" parent="VelocityGroup"]
+layout_mode = 2
+
+[node name="MIDIVelocityLabel" type="Label" parent="VelocityGroup"]
+layout_mode = 2
+text = "Velocity:"
+
+[node name="MIDIVelocity" type="SpinBox" parent="VelocityGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 127.0
+script = ExtResource("2_y07u0")
+
+[node name="OnOffGroup" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MIDIOnOffEnableLabel" type="Label" parent="OnOffGroup"]
+layout_mode = 2
+text = "Specific Note On/Off?"
+
+[node name="MIDIOnOffEnable" type="CheckBox" parent="OnOffGroup"]
+layout_mode = 2
+
+[node name="MIDIOnOffLabel" type="Label" parent="OnOffGroup"]
+layout_mode = 2
+text = "On/Off:"
+
+[node name="MIDIOnOff" type="CheckBox" parent="OnOffGroup"]
+layout_mode = 2
+
+[connection signal="pressed" from="HotkeyGroup/Remove" to="HotkeyGroup/StateRemapButton" method="_on_remove_pressed"]
+[connection signal="toggled" from="ControlsGroup/MIDIControlsEnable" to="HotkeyGroup/StateRemapButton" method="_on_midi_enabled_toggled"]
+[connection signal="toggled" from="ChannelGroup/MIDIChannelEnable" to="HotkeyGroup/StateRemapButton" method="_on_midi_channel_enabled_toggled"]
+[connection signal="value_changed" from="ChannelGroup/MIDIChannel" to="HotkeyGroup/StateRemapButton" method="_on_midi_channel_value_changed"]
+[connection signal="toggled" from="NoteGroup/MIDINoteEnable" to="HotkeyGroup/StateRemapButton" method="_on_midi_note_enabled_toggled"]
+[connection signal="value_changed" from="NoteGroup/MIDINote" to="HotkeyGroup/StateRemapButton" method="_on_midi_note_value_changed"]
+[connection signal="toggled" from="VelocityGroup/MIDIVelocityEnable" to="HotkeyGroup/StateRemapButton" method="_on_midi_velocity_enabled_toggled"]
+[connection signal="value_changed" from="VelocityGroup/MIDIVelocity" to="HotkeyGroup/StateRemapButton" method="_on_midi_velocity_value_changed"]
+[connection signal="toggled" from="OnOffGroup/MIDIOnOffEnable" to="HotkeyGroup/StateRemapButton" method="_on_midi_onoff_enabled_toggled"]
+[connection signal="toggled" from="OnOffGroup/MIDIOnOff" to="HotkeyGroup/StateRemapButton" method="_on_midi_on_off_toggled"]

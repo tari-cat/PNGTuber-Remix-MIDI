@@ -24,6 +24,17 @@ func save_model(path):
 		input_array.append({
 			state_name = input.state_name,
 			hot_key = input.saved_event,
+			
+			midi_enabled = input.midi_enabled,
+			midi_channel_enabled = input.midi_channel_enabled,
+			midi_note_enabled = input.midi_note_enabled,
+			midi_velocity_enabled = input.midi_velocity_enabled,
+			midi_onoff_state_enabled = input.midi_onoff_state_enabled,
+			
+			midi_channel = input.midi_channel,
+			midi_note = input.midi_note,
+			midi_velocity = input.midi_velocity,
+			midi_onoff_state = input.midi_onoff_state
 		})
 	for sprt in sprites:
 		sprt.save_state(Global.current_state)
@@ -255,6 +266,17 @@ func load_model(path : String):
 				get_tree().get_nodes_in_group("StateButtons")[input].saved_event = load_dict.input_array[input].hot_key
 				get_tree().get_nodes_in_group("StateButtons")[input].state_name = load_dict.input_array[input].state_name
 				get_tree().get_nodes_in_group("StateButtons")[input].text = load_dict.input_array[input].state_name
+				if (load_dict.input_array[input].get("midi_enabled") != null): # backwards compat
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_enabled = load_dict.input_array[input].midi_enabled
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_channel_enabled = load_dict.input_array[input].midi_channel_enabled
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_note_enabled = load_dict.input_array[input].midi_note_enabled
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_velocity_enabled = load_dict.input_array[input].midi_velocity_enabled
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_onoff_state_enabled = load_dict.input_array[input].midi_onoff_state_enabled
+					
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_channel = load_dict.input_array[input].midi_channel
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_note = load_dict.input_array[input].midi_note
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_velocity = load_dict.input_array[input].midi_velocity
+					get_tree().get_nodes_in_group("StateButtons")[input].midi_onoff_state = load_dict.input_array[input].midi_onoff_state
 				get_tree().get_nodes_in_group("StateButtons")[input].update_stuff()
 			else:
 				get_tree().get_nodes_in_group("StateButtons")[input].saved_event = load_dict.input_array[input]

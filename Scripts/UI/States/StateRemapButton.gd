@@ -54,3 +54,39 @@ func _on_remove_pressed():
 		if InputMap.action_get_events(StateButton.selected_state.input_key).size() != 0:
 			InputMap.action_erase_events(StateButton.selected_state.input_key)
 			update_key_text()
+
+func _on_midi_enabled_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_enabled = toggled_on
+
+func _on_midi_channel_enabled_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_channel_enabled = toggled_on
+
+func _on_midi_note_enabled_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_note_enabled = toggled_on
+
+func _on_midi_velocity_enabled_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_velocity_enabled = toggled_on
+
+func _on_midi_onoff_enabled_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_onoff_state_enabled = toggled_on
+
+func _on_midi_channel_value_changed(value: float) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_channel = value
+
+func _on_midi_note_value_changed(value: float) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_note = value
+
+func _on_midi_velocity_value_changed(value: float) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_velocity = value
+
+func _on_midi_on_off_toggled(toggled_on: bool) -> void:
+	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
+		StateButton.selected_state.midi_onoff_state = toggled_on
