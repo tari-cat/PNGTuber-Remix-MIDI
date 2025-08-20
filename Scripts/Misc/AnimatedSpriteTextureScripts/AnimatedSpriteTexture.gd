@@ -38,6 +38,7 @@ func _physics_process(delta):
 
 
 func proper_apng_one_shot():
+	dt = 0
 	var cframe = frames[0]
 	sprite_node.texture.diffuse_texture = cframe.texture
 	if sprite_node.texture.normal_texture:
