@@ -160,3 +160,37 @@ func _on_state_name_text_submitted(new_text: String) -> void:
 	if StateButton.selected_state != null && is_instance_valid(StateButton.selected_state):
 		StateButton.selected_state.state_name = new_text
 		StateButton.selected_state.text = new_text
+
+func _on_reorder_left_pressed() -> void:
+	if Global.settings_dict.states.size() < 2:
+		return
+	
+	if Global.current_state == 0:
+		return
+	
+	reorder_states(Global.current_state, Global.current_state - 1)
+
+func _on_reorder_right_pressed() -> void:
+	if Global.settings_dict.states.size() < 2:
+		return
+	
+	if Global.current_state == Global.settings_dict.states.size() - 1:
+		return
+	
+	reorder_states(Global.current_state, Global.current_state + 1)
+
+func swap(i: int, j: int, a: Array) -> Array:
+	var t = a[i]
+	a[i] = a[j]
+	a[j] = t
+	return a
+
+func reorder_states(from_index: int, to_index: int):
+	print_debug("reordering states: " + str(from_index) + " -> " + str(to_index))
+	Global.settings_dict.saved_inputs = swap(from_index, to_index, Global.settings_dict.saved_inputs);
+	Global.settings_dict.states = swap(from_index, to_index, Global.settings_dict.states);
+	Global.settings_dict.light_states = swap(from_index, to_index, Global.settings_dict.light_states);
+	Global.current_state = to_index;
+	var state_buttons = get_tree().get_nodes_in_group("StateButtons")
+	%StateButtons.move_child(state_buttons[from_index], to_index);
+	update_state_numbering()
