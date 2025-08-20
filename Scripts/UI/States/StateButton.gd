@@ -76,35 +76,49 @@ func _input(event):
 				select_state()
 				Global.get_sprite_states(state)
 	if event is InputEventMIDI and midi_enabled:
+		print_debug(event)
 		handle_midi(event)
 
 func handle_midi(event: InputEventMIDI) -> void:
 	var message = event.message
 	
+	# hacky fix
+	var clamped_channel = clamp(midi_channel, 1, 16)
+	var clamped_note = clamp(midi_note, 1, 127)
+	var clamped_velocity = clamp(midi_velocity, 1, 127)
+	
 	# bitwise flags for MIDIMessage enum
-	var note_toggle_flags = MIDI_MESSAGE_NOTE_ON | MIDI_MESSAGE_NOTE_OFF
 	var note_on_flags = MIDI_MESSAGE_NOTE_ON
+	var note_off_flags = MIDI_MESSAGE_NOTE_OFF
 	
-	# isToggle is if the message has a Note ON/OFF bitwise flag
-	var isToggle = (event.message != MIDI_MESSAGE_NONE) && (message & note_toggle_flags) == note_toggle_flags
-	
-	# if it's neither an on or off, return early because we don't really need it
-	if !isToggle:
-		return
+	# if the message isnt none
+	var isValidMessage = event.message != MIDI_MESSAGE_NONE
 	
 	var event_channel = event.channel + 1 # usually 0-15, make it 1-16 for consistency
 	var event_note = event.pitch
 	var event_velocity = event.velocity
-	var event_onoff_state = (event.message != MIDI_MESSAGE_NONE) && (message & note_on_flags) == note_on_flags
+	var event_state = (isValidMessage) && ((message & note_on_flags) == note_on_flags)
 	
-	if (midi_channel_enabled && midi_channel != event_channel):
+	print(state_name)
+	
+	if (midi_channel_enabled && clamped_channel != event_channel):
+		print("failed channel")
 		return
-	if (midi_note_enabled && midi_note != event_note):
+	if (midi_note_enabled && clamped_note != event_note):
+		print("failed note")
 		return
-	if (midi_velocity_enabled && midi_velocity != event_velocity):
+	if (midi_velocity_enabled && clamped_velocity != event_velocity):
+		print("failed velocity")
 		return
-	if (midi_onoff_state_enabled && midi_onoff_state != event_onoff_state):
-		return
+	# this one sucks -- basically if the message is ON and we want an OFF state, OR if the message is OFF and we want an ON state we should return
+	if (midi_onoff_state_enabled && midi_onoff_state):
+		if (midi_onoff_state != event_state):
+			print("failed on " + str(midi_onoff_state) + " " + str(event_state))
+			return
+	if (midi_onoff_state_enabled && !midi_onoff_state):
+		if (midi_onoff_state != event_state):
+			print("failed off " + str(midi_onoff_state) + " " + str(event_state))
+			return
 	
 	select_state()
 	Global.get_sprite_states(state)

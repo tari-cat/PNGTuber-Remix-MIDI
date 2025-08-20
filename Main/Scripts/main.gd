@@ -41,6 +41,7 @@ func _ready():
 	Global.update_ui_pieces.emit()
 	Global.update_camera_smoothing()
 	OS.open_midi_inputs()
+	print_debug(OS.get_connected_midi_inputs())
 
 func update_theme(new_theme : Theme = preload("res://Themes/PurpleTheme/GUITheme.tres")):
 	%UIHolder.theme = new_theme
