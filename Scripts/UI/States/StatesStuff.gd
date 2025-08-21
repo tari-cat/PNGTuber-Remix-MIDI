@@ -187,6 +187,12 @@ func swap(i: int, j: int, a: Array) -> Array:
 
 func reorder_states(from_index: int, to_index: int):
 	print_debug("reordering states: " + str(from_index) + " -> " + str(to_index))
+	
+	var sprites = get_tree().get_nodes_in_group("Sprites")
+	
+	for i in sprites:
+		i.states = swap(from_index, to_index, i.states)
+	
 	Global.settings_dict.saved_inputs = swap(from_index, to_index, Global.settings_dict.saved_inputs);
 	Global.settings_dict.states = swap(from_index, to_index, Global.settings_dict.states);
 	Global.settings_dict.light_states = swap(from_index, to_index, Global.settings_dict.light_states);
